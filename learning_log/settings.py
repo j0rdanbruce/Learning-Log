@@ -32,9 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     #my apps
-    'learning_logs',
-    'users',
-    'notify',
+    'learning_logs'
 
     #third party apps
     'bootstrap4',
