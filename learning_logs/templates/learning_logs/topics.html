@@ -1,0 +1,125 @@
+{% extends "learning_logs/base.html" %}
+
+
+{% block page_header %}
+  {% if user.is_authenticated %}
+    <h2>My Topics</h2>
+  {% else %}
+    <h2>Public Topics</h2>
+  {% endif %}
+{% endblock page_header %}
+
+{% block content %}
+  <p><a href="{% url 'learning_logs:new_topic' %}">Add a new topic</a></p>
+
+  {% if user.is_authenticated %}
+    <ul>
+      {% for topic in topics %}
+        <div class="card mb-3">
+            <h4 class="card-header">Created by {{ user.username }}
+            <small>{{ topic.date_added|date:'M d, Y H:i' }}</small></h4>
+
+            <li><h3 class="card-body">
+                <a href="{% url 'learning_logs:topic' topic.id %}"> 
+                    {{ topic }}
+                </a>
+                    <a class="btn btn-primary" href=
+                        "{% url 'learning_logs:delete_topic' topic.id %}">
+                        delete topic
+                    </a>
+                    <br>
+                
+                <h5>Comments:</h5>
+                {% if topic.comments.all %}
+                  <ul>
+                    {% for comment in  topic.comments.all %}
+                      <h6>Coment by {{ comment.owner }} on {{ comment.date_added }}</h6>
+                      <h6>{{ comment.comment }}</h6>
+                    {% endfor %}
+                  </ul>
+                {% else %}
+                  <ul><h6>No comments have been added to this post yet.</h6></ul>
+                  
+                {% endif %}
+                
+                {% if messages %}
+                  <ul class="messages">
+                    {% for message in messages %}
+                      <message class="info">{{ message }}</message>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
+            </h3></li>
+        </div>
+      {% empty %}
+            <li><h3>No topics have been added yet.</h3></li>
+      {% endfor %}
+    </ul>
+    <br>
+    <br>
+
+    <h3 class="pb-2 mb-2 border-bottom">Public Topics</h3>
+    <p>This is a public portion of the topics page that allows both registered 
+        and non-registered users to view various topics.
+    </p>
+
+    <ul>
+      {% for public_topic in public_topics %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>Created by {{ user.username }}
+                <small>{{ public_topic.date_added|date:'M d, Y H:i' }}</small></h4>
+            </div>
+            <li><h3 class="card-body">
+                <a href="{% url 'learning_logs:topic' public_topic.id %}">
+                    {{ public_topic }}</a>
+                <a href="{% url 'learning_logs:topic_comment' public_topic.id %}"
+                    class="btn btn-primary">make a comment</a>
+            </h3></li>
+        </div>
+      {% endfor %}
+    </ul>
+
+
+  {% else %}
+    <p>This is a public portion of the topics page that allows both registered 
+        and non-registered users to view various topics.</p>
+    <br>
+    <br>
+    
+    <ul>
+      {% for public_topic in public_topics %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <h4>Created by: {{ user.username }} 
+                <small>{{ public_topic.date_added|date:'M d, Y H:i' }}</small></h4>
+            </div>
+
+            <li><h3 class="card-body"><a href="{% url 'learning_logs:topic' public_topic.id %}">
+                {{ public_topic }}</a></h3></li>
+        </div>
+      {% endfor %}
+    </ul>
+
+  {% endif %}
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
